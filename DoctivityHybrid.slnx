@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="DoctivityHybrid/DoctivityHybrid.Shared/DoctivityHybrid.Shared.csproj" />
+  <Project Path="DoctivityHybrid/DoctivityHybrid.Web/DoctivityHybrid.Web.csproj" />
+  <Project Path="DoctivityHybrid/DoctivityHybrid/DoctivityHybrid.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>

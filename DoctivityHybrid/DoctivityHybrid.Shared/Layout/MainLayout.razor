@@ -1,0 +1,57 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @ref="@_mudThemeProvider" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        My Application
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <NavMenu />
+    </MudDrawer>
+
+    <MudMainContent MaxWidth="MaxWidth.Medium" Class="mt-4 px-4">
+        @Body
+    </MudMainContent>
+
+    <MudOverlay Visible="@_loading" DarkBackground="true">
+        <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+    </MudOverlay>
+</MudLayout>
+
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+@code {
+    bool _drawerOpen = true;
+    private bool _loading = false;
+    private MudThemeProvider _mudThemeProvider = default!;
+    private bool _isDarkMode = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await _mudThemeProvider.WatchSystemDarkModeAsync(OnSystemDarkModeChanged);
+        }
+    }
+    private Task OnSystemDarkModeChanged(bool isDarkMode)
+    {
+        _isDarkMode = isDarkMode;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+}
