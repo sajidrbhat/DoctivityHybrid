@@ -6,7 +6,7 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Hello, @_name!</h1>
 
 Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
 
@@ -16,9 +16,27 @@ Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
 <MudButton Variant="Variant.Filled" Color="Color.Secondary">Secondary</MudButton>
 <MudButton Variant="Variant.Filled" Disabled="true">Disabled</MudButton>
 
+<MudButton Variant="Variant.Filled" Disabled="true">Disabled</MudButton>
 
 
 @code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthStateTask { get; set; }
+
     private string factor => FormFactor.GetFormFactor();
     private string platform => FormFactor.GetPlatform();
+
+    private string _name = string.Empty;
+    override protected async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateTask;
+        var user = authState.User;
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var userName = user.Identity.Name;
+            _name = userName ?? "Unknown User";
+            // You can use userName or other claims as needed
+        }
+    }
 }
