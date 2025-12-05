@@ -1,0 +1,105 @@
+﻿@page "/notes/add"
+
+@using System.Security.Claims
+@using System.ComponentModel.DataAnnotations
+
+
+@inject INoteService NoteService
+
+
+<EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <MudGrid>
+        <!-- Form Section -->
+        <MudItem xs="12" sm="7">
+            <MudCard>
+
+                <MudCardContent>
+
+                    <!-- Title -->
+                    <MudTextField Label="Title"
+                                  @bind-Value="model.Title"
+                                  For="@(() => model.Title)"
+                                  Required="true"
+                                  HelperText="Enter the note title"
+                                  Class="mb-4" />
+
+                    <!-- Content -->
+                    <MudTextField Label="Content"
+                                  @bind-Value="model.Content"
+                                  For="@(() => model.Content)"
+                                  Lines="6"
+                                  TextMode="MudBlazor.TextMode.Multiline"
+                                  Required="true"
+                                  HelperText="Write your note here"
+                                  Class="mb-4" />
+
+                </MudCardContent>
+
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Class="ml-auto">
+                        Save Note
+                    </MudButton>
+                </MudCardActions>
+
+            </MudCard>
+        </MudItem>
+
+        <!-- Validation Summary Section -->
+        <MudItem xs="12" sm="5">
+            <MudPaper Class="pa-4 mud-height-full">
+                <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
+
+                @if (success)
+                {
+                    <MudAlert Severity="Severity.Success" Class="mt-3">
+                        Note saved successfully.
+                    </MudAlert>
+                }
+                else
+                {
+                    <MudText Color="Color.Error">
+                        <ValidationSummary />
+                    </MudText>
+                }
+            </MudPaper>
+        </MudItem>
+
+        <!-- Bottom Info -->
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2" Align="Align.Center">
+                Fill out both fields to save your note.
+            </MudText>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    private NoteModel model = new();
+    private bool success = false;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthStateTask { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        model.UpdatedAt = DateTime.UtcNow;
+
+        var authState = AuthStateTask.Result;
+        var userId = authState.User.GetUserId();
+
+        var result = await NoteService.CreateNoteAsync(model, userId);
+
+        success = result.IsSuccess;
+
+        // TODO: Save to database/service
+
+        success = true;
+        StateHasChanged();
+    }
+
+}

@@ -1,23 +1,29 @@
 ﻿@page "/"
 @using DoctivityHybrid.Shared.Services
+
 @inject IFormFactor FormFactor
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
 
 @attribute [Authorize]
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, @_name!</h1>
+<div class="d-flex align-items-center justify-content-between">
+    <h1>Hello, @_name!</h1>
 
-Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
+    <MudButton Color="Color.Secondary"
+               Variant="Variant.Outlined"
+               StartIcon="@Icons.Material.Filled.ExitToApp"
+               OnClick="Logout">
+    </MudButton>
+</div>
+
+<p>
+    Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
+</p>
 
 <br />
-<MudButton Variant="Variant.Filled">Default</MudButton>
-<MudButton Variant="Variant.Filled" Color="Color.Primary">Primary</MudButton>
-<MudButton Variant="Variant.Filled" Color="Color.Secondary">Secondary</MudButton>
-<MudButton Variant="Variant.Filled" Disabled="true">Disabled</MudButton>
-
-<MudButton Variant="Variant.Filled" Disabled="true">Disabled</MudButton>
-
 
 @code {
 
@@ -28,6 +34,8 @@ Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
     private string platform => FormFactor.GetPlatform();
 
     private string _name = string.Empty;
+    private bool isLoggingOut = false;
+
     override protected async Task OnInitializedAsync()
     {
         var authState = await AuthStateTask;
@@ -38,5 +46,10 @@ Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
             _name = userName ?? "Unknown User";
             // You can use userName or other claims as needed
         }
+    }
+
+    private async Task Logout()
+    {
+        NavigationManager.NavigateTo("/logout", replace: true, forceLoad: true);
     }
 }

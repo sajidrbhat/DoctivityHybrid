@@ -47,6 +47,9 @@ namespace DoctivityHybrid
             // Add device-specific services used by the DoctivityHybrid.Shared project
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
+
+            builder.Services.AddScoped<INoteService, NoteService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

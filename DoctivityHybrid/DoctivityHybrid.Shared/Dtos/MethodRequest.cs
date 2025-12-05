@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace DoctivityHybrid.Shared.Dtos
 {
     public record MethodResult(bool IsSuccess, string? Message)
@@ -16,4 +18,16 @@ namespace DoctivityHybrid.Shared.Dtos
 
 
     public record LoggedInUser(int UserId, string Username);
+
+    public class NoteModel
+    {
+        public int Id { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string Content { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
 }

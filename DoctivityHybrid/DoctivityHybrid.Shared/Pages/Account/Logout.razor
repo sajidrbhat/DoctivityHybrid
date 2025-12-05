@@ -1,0 +1,15 @@
+﻿@page "/logout"
+@attribute [ExcludeFromInteractiveRouting]
+
+@inject NavigationManager NavigationManager
+@inject IAuthService AuthService
+
+<p>Logging-out ... </p>
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.PlatformLogoutAsync();
+        NavigationManager.NavigateTo("/login", replace: true);
+    }
+
+}

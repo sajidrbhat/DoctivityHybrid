@@ -8,5 +8,7 @@ namespace DoctivityHybrid.Shared.Services
         Task<MethodResult<LoggedInUser>> LoginAsync(string username, string password);
 
         Task<MethodResult> PlatformLoginAsync(LoggedInUser user);
+
+        Task<MethodResult> PlatformLogoutAsync();
     }
 }

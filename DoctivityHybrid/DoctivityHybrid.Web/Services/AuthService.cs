@@ -55,5 +55,12 @@ namespace DoctivityHybrid.Web.Services
                 return MethodResult<LoggedInUser>.Failure("Invalid username or password.");
             }
         }
+
+        public async Task<MethodResult> PlatformLogoutAsync()
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            await httpContext.SignOutAsync(WebConstants.WebAuthScheme);
+            return MethodResult.Success();
+        }
     }
 }
